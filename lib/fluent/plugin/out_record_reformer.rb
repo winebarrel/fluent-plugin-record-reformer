@@ -219,7 +219,7 @@ module Fluent
           interpolated = $1
         else
           interpolated = str.gsub(/\$\{([^}]+)\}/, '#{\1}') # ${..} => #{..}
-          interpolated = "\"#{interpolated}\"",
+          interpolated = "\"#{interpolated}\""
         end
 
         eval interpolated, @placeholders.instance_eval { binding }
