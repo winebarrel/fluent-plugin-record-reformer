@@ -215,7 +215,13 @@ module Fluent
       #
       # @param [String] str         the string to be replaced
       def expand(str)
-        interpolated = str.gsub(/\$\{([^}]+)\}/, '\1') # ${..} => ..
+        if str =~ /\A\#\{(.+)\}\z/
+          interpolated = $1
+        else
+          interpolated = str.gsub(/\$\{([^}]+)\}/, '#{\1}') # ${..} => #{..}
+          interpolated = interpolated.inspect
+        end
+
         eval interpolated, @placeholders.instance_eval { binding }
       rescue => e
         log.warn "record_reformer: failed to expand `#{str}`", :error_class => e.class, :error => e.message
